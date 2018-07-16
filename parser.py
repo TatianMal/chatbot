@@ -4,12 +4,27 @@ from collections import OrderedDict
 
 
 class Parser:
-    def __init__(self, url):
+    def __init__(self, base_url, name_game):
         self.html = ''
-        self.get_html(url)
+        self.url = self. make_final_url(base_url, name_game)
+        self.get_html()
 
-    def get_html(self, url):
-        r = requests.get(url)
+    def make_final_url(self, base_url, name_game):
+        if name_game != '':
+            tmp_name = name_game.split(' ')
+            tmp_url = base_url + 'search/?s=' + tmp_name[0]
+            for part in range(len(tmp_name)):
+                if part == 0:
+                    continue
+                else:
+                    tmp_url += '+' + tmp_name[part]
+            tmp_url += '&where=news'
+            return tmp_url
+        else:
+            return base_url + 'news'
+
+    def get_html(self):
+        r = requests.get(self.url)
         self.html = r.text
 
     def get_news(self):
@@ -34,5 +49,5 @@ class Parser:
 
 
 if __name__ == '__main__':
-    par = Parser('https://stopgame.ru/news')
+    par = Parser('https://stopgame.ru/', '')
     print(par.get_news())

@@ -17,12 +17,12 @@ class Guess:
             value = input('Ваш ответ: ')
             if value == self.choosen_value:
                 print('Поздравляю, вы угадали!')
-                return 1
+                return 'human'
             else:
                 print('Мимо, у Вас еще ' + str(2-i) + ' попытки(-а).\n')
         else:
             print('К сожалению, Вы не угадали.')
-            return 0
+            return 'computer'
 
 
 if __name__ == '__main__':
