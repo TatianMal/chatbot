@@ -2,5 +2,5 @@ name: guess_game
 human: 5
 comp: 3
 name: x_o_game
-human: 1
+human: 2
 comp: 1

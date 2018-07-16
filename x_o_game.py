@@ -76,7 +76,6 @@ class XOGame:
         return moves
 
     def choose_winner(self):
-        """Определить победителя в игре"""
         for row in self.WAYS_TO_WIN:
             if self.board[row[0]] == self.board[row[1]] == self.board[row[2]] != self.EMPTY:
                 # Если одинаковые фишки в позиции победы
@@ -88,18 +87,16 @@ class XOGame:
             return None
 
     def human_move(self):
-        """Ход человека"""
         legal = self.legal_moves()
         move = None
         while move not in legal:
-            move = self.ask_number("Твой ход, выбери поле (0, 8): ", 0, self.NUM_SQUARES)
+            move = self.ask_number("Ваш ход, выбери поле (0, 8): ", 0, self.NUM_SQUARES)
             if move not in legal:
-                print("\nСмешной человек! Это поле уже занято")
-        print("Ладно...")
+                print("\nЭто поле уже занято")
+        print("Принято")
         return move
 
     def computer_move(self, computer, human):
-        """Ход компьютера"""
         # Создаем копию доски, чтобы ничего не повредить
         board = self.board[:]
         BEST_MOVES = (4, 0, 2, 6, 8, 1, 3, 5, 7)
@@ -138,14 +135,14 @@ class XOGame:
         else:
             print("Ничья!")
         if the_winner == computer:
-            print("Я так и знал, человек! Твой интеллект слишком мал, чтобы победить!")
+            print("Я так и знал, человек! Ваш интеллект слишком мал, чтобы победить!")
             return 'comp'
         elif the_winner == human:
-            print("Не может быть! Это явно ошибка! Ты не мог этого сделать!",
-                  "\n Клянусь, я больше такого не допущу!")
+            print("Не может быть! Вы победили!",
+                  "\nКлянусь, я больше такого не допущу!")
             return 'human'
         elif the_winner == self.TIE:
-            print("Что ж, тебе удалось свести в ничью, но больше так не получится!")
+            print("Что ж, Вам удалось свести в ничью, но больше так не получится!")
             return 'tie'
 
     def game(self):
