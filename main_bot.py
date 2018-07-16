@@ -53,6 +53,7 @@ class GameState(State):
 
     def set_state(self, context):
         self._context = context
+        self._context.initial_first = False
         self.jokes = self._context.settings.get('joke_phrases')
         self.percent_wins = self._context.settings.get('percent_of_wins_bot')
         self.execution_state('')
@@ -65,10 +66,15 @@ class GameState(State):
             keys = self._context.settings.get('words_to_parse_answ').get(func.__name__)
             to_state = handler_answer(keys, answer)
             if func.__name__ == 'to_parse_news' and to_state:
-                index_beg_name = answer.index('\'')
-                index_end_name = answer.rindex('\'')
-                namegame = answer[index_beg_name + 1: index_end_name]
-                func(namegame)
+                namegame = ''
+                try:
+                    index_beg_name = answer.index('"')
+                    index_end_name = answer.rindex('"')
+                    namegame = answer[index_beg_name + 1: index_end_name]
+                except:
+                    func('')
+                else:
+                    func(namegame)
             else:
                 if to_state:
                     func()
@@ -143,6 +149,8 @@ class GameState(State):
                     score_human += 1
                 elif result == 'comp':
                     score_comp += 1
+                logs.pop(index_name+1)
+                logs.pop(index_name+1)
                 logs.insert(index_name+1, 'human: ' + str(score_human))
                 logs.insert(index_name+2, 'comp: ' + str(score_comp))
 
@@ -150,14 +158,17 @@ class GameState(State):
         # необходимо открыть файл для дозаписи
         if name != '':
             with open('games_log.txt', 'a', encoding='utf-8') as log:
-                log.write('name: ' + name + '\n')
+                log.write('\nname: ' + name + '\n')
                 log.write('human: ' + str(score_human) + '\n')
-                log.write('comp: ' + str(score_comp) + '\n')
+                log.write('comp: ' + str(score_comp))
         # Для удаления старых значений - перезаписи
         else:
             with open('games_log.txt', 'w', encoding='utf-8') as log:
-                for line in logs:
-                    log.write(line + '\n')
+                for i in range(len(logs)):
+                    if i == len(logs) - 1:
+                        log.write(logs[i])
+                    else:
+                        log.write(logs[i] + '\n')
 
 
 class XOGameState(GameState):
@@ -191,6 +202,7 @@ class ParserState(State):
 
     def set_state(self, context):
         self._context = context
+        self._context.initial_first = False
         url = self._context.settings.get('base_url_news')
         self.execution_state(url)
         self.parser_answers()
@@ -202,10 +214,15 @@ class ParserState(State):
             keys = self._context.settings.get('words_to_parse_answ').get(func.__name__)
             to_state = handler_answer(keys, answer)
             if func.__name__ == 'to_parse_news' and to_state:
-                index_beg_name = answer.index('\'')
-                index_end_name = answer.rindex('\'')
-                namegame = answer[index_beg_name + 1: index_end_name]
-                func(namegame)
+                namegame = ''
+                try:
+                    index_beg_name = answer.index('"')
+                    index_end_name = answer.rindex('"')
+                    namegame = answer[index_beg_name + 1: index_end_name]
+                except:
+                    func('')
+                else:
+                    func(namegame)
             else:
                 if to_state:
                     func()
@@ -228,8 +245,8 @@ class ParserState(State):
     def check_time(self):
         time_log = self.get_time_request()
         if time_log is not None:
-            date, time = time_log.split(' - ')[1].split(': ')
-            curr_date, curr_time = self.curr_time.split(' - ')[1].split(': ')
+            date, time = time_log.split(' - ')[1].split(': ')[1].split(' ')
+            curr_date, curr_time = self.curr_time.split(' ')
 
             eq = self.eq_date(date, curr_date)
             if eq == 'same':
@@ -265,8 +282,8 @@ class ParserState(State):
         elif curr_h == h:
             if curr_m > m:
                 return 'no'
-        else:
-            return 'same'
+            else:
+                return 'same'
 
     def eq_date(self, date, curr_date):
         # проверка совпадения дат
@@ -298,13 +315,11 @@ class ParserState(State):
         for key, value in news.items():
             print('Заголовок: ' + value)
             print('Ссылка: ' + key)
-            print('\n')
         self.write_time()
 
     def write_time(self):
         time = self.get_time_request()
-        str_time = 'type: ' + self.type_r + 'time: ' + self.curr_time
-
+        str_time = 'type: ' + self.type_r + " " + self.name_game + ' - time: ' + self.curr_time
         if time is None:
             with open('parser_log.txt', 'a', encoding='utf-8') as log:
                 log.write(str_time + '\n')
@@ -314,7 +329,7 @@ class ParserState(State):
                 logs = log.read().split('\n')
             with open('parser_log.txt', 'w', encoding='utf-8') as log:
                 for l in logs:
-                    if type in l:
+                    if self.type_r in l:
                         log.write(str_time + '\n')
                     else:
                         log.write(l + '\n')
@@ -326,6 +341,7 @@ class InitialState(State):
 
     def set_state(self, context):
         self._context = context
+        self._context.initial_first = False
         self.execution_state('')
 
     def parser_answers(self):
@@ -377,6 +393,7 @@ class ErrorState(State):
 
     def set_state(self, context):
         self._context = context
+        self._context.initial_first = False
         self.execution_state('')
 
     def parser_answers(self):
@@ -432,22 +449,9 @@ class Context:
             self.settings = data
 
 
-    # def to_x_o_game(self):
-    #     self._state.to_x_o_game()
-    #
-    # def to_guess_game(self):
-    #     self._state.to_guess_game()
-    #
-    # def to_parse_news(self):
-    #     self._state.to_parse_news()
-    #
-    # def to_parse_game_news(self):
-    #     self._state.to_parse_game_news()
-
-
 if __name__ == '__main__':
     g = Context('settings.json')
-    print('finish')
+
 
 
 

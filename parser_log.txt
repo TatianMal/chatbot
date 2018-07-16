@@ -1,3 +1,5 @@
-type: newstime: 17-07-2018 04:19
-type: newstime: 17-07-2018 04:22
-type: newstime: 17-07-2018 04:25
+type: news  - time: 17-07-2018 05:31
+type: news Devil May Cry - time: 17-07-2018 05:31
+type: news Final Fantasy - time: 17-07-2018 05:32
+type: news Rezident Evil - time: 17-07-2018 05:33
+type: news Mortal Combat - time: 17-07-2018 05:34

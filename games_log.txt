@@ -1,18 +1,6 @@
-name: x_o_game
-human: 3
-comp: 0
-human: 2
-comp: 0
-human: 1
-comp: 0
-human: 1
-comp: 0
-
 name: guess_game
+human: 5
+comp: 3
+name: x_o_game
 human: 1
-comp: 0
-human: 0
-comp: 0
-
-
-
+comp: 1

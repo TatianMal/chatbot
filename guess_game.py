@@ -22,7 +22,7 @@ class Guess:
                 print('Мимо, у Вас еще ' + str(2-i) + ' попытки(-а).\n')
         else:
             print('К сожалению, Вы не угадали.')
-            return 'computer'
+            return 'comp'
 
 
 if __name__ == '__main__':

@@ -139,7 +139,7 @@ class XOGame:
             print("Ничья!")
         if the_winner == computer:
             print("Я так и знал, человек! Твой интеллект слишком мал, чтобы победить!")
-            return 'computer'
+            return 'comp'
         elif the_winner == human:
             print("Не может быть! Это явно ошибка! Ты не мог этого сделать!",
                   "\n Клянусь, я больше такого не допущу!")
