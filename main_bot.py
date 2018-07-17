@@ -1,4 +1,4 @@
-'''There will be a documentation'''
+
 import json
 from abc import ABCMeta, abstractmethod
 from x_o_game import XOGame
